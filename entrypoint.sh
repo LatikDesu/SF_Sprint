@@ -11,6 +11,6 @@ then
     echo "PostgreSQL started"
 fi
 
-#alembic upgrade head
+alembic upgrade head
 
 exec "$@"
