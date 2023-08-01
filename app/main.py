@@ -1,8 +1,13 @@
+from logging.config import dictConfig
+
 import sqlalchemy
 from fastapi import FastAPI
 
 from app.db_connection import DATABASE_URL, database
 from app.routers import pereval
+from app.logger import LogConfig
+
+dictConfig(LogConfig().dict())
 
 app = FastAPI(
     title="FSTR Pereval API",

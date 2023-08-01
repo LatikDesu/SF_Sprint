@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Request
-from pydantic import ValidationError
+from fastapi import APIRouter, Request, HTTPException
 
 from app.db_connection import database
 from app.models.models import users_table, coords_table, images_table, pereval_add_table
 from app.models.schemas import PerevalPost, SubmitDataResponse
+from app.logger import get_logger
+
+logger = get_logger()
 
 router = APIRouter(tags=["SubmitData"])
 
@@ -21,9 +23,11 @@ async def submit_data(request: PerevalPost):
             values(first_name=request.user.name,
                    last_name=request.user.fam,
                    patronymic=request.user.otc,
-                   phone=request.user.phone)
+                   phone=request.user.phone
+                   )
 
-        user = await database.execute(query)
+        await database.execute(query)
+        user = check_user.id
 
     else:
         query = users_table.insert().values(
@@ -43,7 +47,6 @@ async def submit_data(request: PerevalPost):
     coords = await database.execute(query)
 
     query = pereval_add_table.insert().values(
-        status="new",
         beauty_title=request.beauty_title,
         title=request.title,
         other_titles=request.other_titles,
@@ -58,12 +61,9 @@ async def submit_data(request: PerevalPost):
     pereval = await database.execute(query)
 
     for image in request.images:
-        query = images_table.insert().values(pereval=pereval.id,
+        query = images_table.insert().values(pereval=pereval,
                                              data=image.data,
                                              name=image.name)
         database.execute(query)
 
-    query = pereval_add_table.insert().values(
-
-    )
-    return SubmitDataResponse(status=200, message="Отправлено успешно", id=pereval.id)
+    return SubmitDataResponse(status=200, message="Отправлено успешно", id=pereval)
