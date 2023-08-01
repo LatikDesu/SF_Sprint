@@ -1,8 +1,8 @@
-"""Migration
+"""Added user table
 
-Revision ID: c4669cfc7854
+Revision ID: 7a0c0df0777f
 Revises: 
-Create Date: 2023-08-01 10:45:26.190501
+Create Date: 2023-08-01 13:47:42.295580
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c4669cfc7854'
+revision = '7a0c0df0777f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -48,13 +48,13 @@ def upgrade() -> None:
     )
     op.create_table('pereval_add',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('status', sa.String(length=10), nullable=False),
+    sa.Column('status', sa.String(length=10), server_default='new', nullable=False),
     sa.Column('coords_id', sa.Integer(), nullable=False),
     sa.Column('beauty_title', sa.String(length=255), nullable=False),
     sa.Column('title', sa.String(length=255), nullable=False),
     sa.Column('other_titles', sa.String(length=255), nullable=False),
     sa.Column('connect', sa.Text(), nullable=True),
-    sa.Column('add_time', sa.DateTime(), nullable=False),
+    sa.Column('add_time', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.Column('level_winter', sa.String(length=255), nullable=True),
     sa.Column('level_summer', sa.String(length=255), nullable=True),
     sa.Column('level_autumn', sa.String(length=255), nullable=True),
@@ -69,7 +69,7 @@ def upgrade() -> None:
     sa.Column('pereval', sa.Integer(), nullable=True),
     sa.Column('data', sa.String(length=100), nullable=True),
     sa.Column('name', sa.String(length=100), nullable=True),
-    sa.Column('data_added', sa.DateTime(), nullable=False),
+    sa.Column('data_added', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.ForeignKeyConstraint(['pereval'], ['pereval_add.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

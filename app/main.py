@@ -2,21 +2,21 @@ import sqlalchemy
 from fastapi import FastAPI
 
 from app.db_connection import DATABASE_URL, database
+from app.routers import pereval
 
 app = FastAPI(
     title="FSTR Pereval API",
-    description="The graphic novel API for the RSHB hackathon is a set of tools and interfaces that allow "
-                "you to create and run interactive stories in graphic novel format. ",
+    description="API ФСТР, предназначено для спортивно-туристического мобильного приложения.",
     contact={"name": "Evgeny Abrosimov",
              "url": "https://github.com/", },
     version="0.1.0",
     docs_url="/docs",
-    redoc_url=None,
-)
+    redoc_url="/redoc", )
 
 engine = sqlalchemy.create_engine(
     DATABASE_URL, connect_args={"check_same_thread": False}
 )
+
 
 @app.on_event("startup")
 async def startup():
@@ -26,3 +26,6 @@ async def startup():
 @app.on_event("shutdown")
 async def shutdown():
     await database.disconnect()
+
+
+app.include_router(pereval.router)

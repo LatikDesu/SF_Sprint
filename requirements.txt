@@ -5,6 +5,8 @@ asyncpg==0.28.0
 click==8.1.6
 colorama==0.4.6
 databases==0.7.0
+dnspython==2.4.1
+email-validator==2.0.0.post2
 fastapi==0.100.1
 greenlet==2.0.2
 h11==0.14.0
