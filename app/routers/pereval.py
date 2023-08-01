@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 
 from app.db_connection import database
-from app.models.models import users_table, coords_table, images_table, pereval_add_table
-from app.models.schemas import PerevalPost, SubmitDataResponse
 from app.logger import get_logger
+from app.models.models import (coords_table, images_table, pereval_add_table,
+                               users_table)
+from app.models.schemas import PerevalPost, SubmitDataResponse
 
 logger = get_logger()
 

@@ -4,7 +4,8 @@ import pytest
 from fastapi import HTTPException
 
 from app.db_connection import database
-from app.models.schemas import PerevalPost, UserModel, CoordsModel, LevelModel, ImagesModel
+from app.models.schemas import (CoordsModel, ImagesModel, LevelModel,
+                                PerevalPost, UserModel)
 from app.routers.pereval import submit_data
 
 

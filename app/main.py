@@ -4,8 +4,8 @@ import sqlalchemy
 from fastapi import FastAPI
 
 from app.db_connection import DATABASE_URL, database
-from app.routers import pereval
 from app.logger import LogConfig
+from app.routers import pereval
 
 dictConfig(LogConfig().dict())
 
@@ -15,8 +15,7 @@ app = FastAPI(
     contact={"name": "Evgeny Abrosimov",
              "url": "https://github.com/", },
     version="0.1.0",
-    docs_url="/docs",
-    redoc_url="/redoc", )
+    docs_url="/docs")
 
 engine = sqlalchemy.create_engine(
     DATABASE_URL, connect_args={"check_same_thread": False}
