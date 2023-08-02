@@ -58,6 +58,13 @@ class PerevalResponse(BaseModel):
     id: Optional[int] = None
 
 
+class PatchResponse(BaseModel):
+    """ Model for patch response to pereval patch event"""
+
+    state: int
+    message: Optional[str] = None
+
+
 class PerevalGetResponse(BaseModel):
     """ Model for get response to pereval by id"""
 

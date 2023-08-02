@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import HTTPException
 from sqlalchemy.exc import DatabaseError, IntegrityError
@@ -11,8 +11,21 @@ from app.models.schemas import CoordsModel, ImagesModel, PerevalPostRequest, Use
 logger = get_logger()
 
 
-async def create_coords(coords: CoordsModel) -> int:
+async def get_or_create_coords(coords: CoordsModel, coords_id: Optional[int] = None) -> int:
     try:
+        if coords_id:
+            query = coords_table.select().where(coords_table.c.id == coords_id)
+            check_coords = await database.fetch_one(query)
+            if check_coords:
+                query = coords_table.update().where(coords_table.c.id == coords_id). \
+                    values(longitude=coords.longitude,
+                           latitude=coords.latitude,
+                           height=coords.height)
+
+                await database.execute(query)
+                logger.info(f"Coords updated successfully. ID: {coords_id}")
+                return check_coords.id
+
         query = coords_table.insert().values(latitude=coords.latitude,
                                              longitude=coords.longitude,
                                              height=coords.height)
@@ -42,6 +55,26 @@ async def create_pereval(request: PerevalPostRequest, user_id: int, coords_id: i
     except Exception as e:
         logger.error(f"Error creating pereval: {str(e)}")
         raise HTTPException(status_code=500, detail="Error creating pereval")
+
+
+async def update_pereval(request: PerevalPostRequest, user_id: int, coords_id: int) -> int:
+    try:
+        query = pereval_add_table.insert().values(
+            beauty_title=request.beauty_title,
+            title=request.title,
+            other_titles=request.other_titles,
+            connect=request.connect,
+            coords_id=coords_id,
+            user_id=user_id,
+            level_winter=request.level.winter,
+            level_summer=request.level.summer,
+            level_autumn=request.level.autumn,
+            level_spring=request.level.spring
+        )
+        return await database.execute(query)
+    except Exception as e:
+        logger.error(f"Error update pereval: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error update pereval")
 
 
 async def get_or_create_user(user: UserModel) -> int:
