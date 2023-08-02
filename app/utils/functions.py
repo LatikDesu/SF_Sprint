@@ -57,9 +57,9 @@ async def create_pereval(request: PerevalPostRequest, user_id: int, coords_id: i
         raise HTTPException(status_code=500, detail="Error creating pereval")
 
 
-async def update_pereval(request: PerevalPostRequest, user_id: int, coords_id: int) -> int:
+async def update_pereval(request: PerevalPostRequest, pereval_id: int, user_id: int, coords_id: int) -> int:
     try:
-        query = pereval_add_table.insert().values(
+        query = pereval_add_table.update().where(pereval_add_table.c.id == pereval_id).values(
             beauty_title=request.beauty_title,
             title=request.title,
             other_titles=request.other_titles,
@@ -71,6 +71,7 @@ async def update_pereval(request: PerevalPostRequest, user_id: int, coords_id: i
             level_autumn=request.level.autumn,
             level_spring=request.level.spring
         )
+
         return await database.execute(query)
     except Exception as e:
         logger.error(f"Error update pereval: {str(e)}")
