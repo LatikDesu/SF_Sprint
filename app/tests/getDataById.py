@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch
-
 import pytest
 from sqlalchemy.exc import DatabaseError, IntegrityError
 
