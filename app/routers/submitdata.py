@@ -48,7 +48,7 @@ async def submit_data(request: PerevalPostRequest) -> PerevalResponse:
             description="Получение данных о перевале по id",
             response_model=PerevalGetResponse)
 async def get_data(pereval_id: int):
-    async with database.transaction():
+    async with database.connection():
         try:
             query = (
                 sqlalchemy.select(
