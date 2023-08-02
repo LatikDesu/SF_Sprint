@@ -4,6 +4,7 @@ services:
   app:
     container_name: API
     build:
+      context: .
       dockerfile: ./Dockerfile
     restart: unless-stopped
     entrypoint: ./entrypoint.sh
