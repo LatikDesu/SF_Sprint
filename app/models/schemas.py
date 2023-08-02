@@ -1,6 +1,7 @@
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field
+from pydantic.validators import datetime
 
 
 class UserModel(BaseModel):
@@ -33,7 +34,7 @@ class LevelModel(BaseModel):
     spring: str
 
 
-class PerevalPost(BaseModel):
+class PerevalPostRequest(BaseModel):
     """    Model for post request to pereval add event"""
 
     beauty_title: str
@@ -49,9 +50,28 @@ class PerevalPost(BaseModel):
     images: list[ImagesModel]
 
 
-class SubmitDataResponse(BaseModel):
+class PerevalResponse(BaseModel):
     """ Model for post response to pereval add event"""
 
     status: int
     message: Optional[str] = None
     id: Optional[int] = None
+
+
+class PerevalGetResponse(BaseModel):
+    """ Model for get response to pereval by id"""
+
+    id: int
+    status: str
+    beauty_title: str
+    title: str
+    other_titles: Optional[str] = None
+    connect: Optional[str] = None
+    add_time: datetime
+
+    user: UserModel
+    coords: CoordsModel
+
+    level: LevelModel
+
+    images: list[ImagesModel]
