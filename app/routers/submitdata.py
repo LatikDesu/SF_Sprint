@@ -6,7 +6,8 @@ from starlette.responses import JSONResponse
 from app.db_connection import database
 from app.logger import get_logger
 from app.models.models import pereval_add_table, coords_table, users_table
-from app.models.schemas import PerevalPostRequest, PerevalResponse, PerevalGetResponse, PatchResponse
+from app.models.schemas import PerevalPostRequest, PerevalResponse, PerevalGetResponse, PatchResponse, \
+    PerevalResponseByEmail
 from app.utils.functions import get_or_create_coords, create_images, create_pereval, get_or_create_user, \
     get_pereval_by_id, update_pereval
 
@@ -65,7 +66,6 @@ async def get_data(pereval_id: int):
             if pereval:
                 logger.info(f"Data retrieved successfully. Pereval ID: {pereval.id}")
                 response = await get_pereval_by_id(pereval)
-                return response
 
             else:
                 logger.info(f"Data not found. Pereval ID: {pereval}")
@@ -73,7 +73,7 @@ async def get_data(pereval_id: int):
 
         except (DatabaseError, IntegrityError) as e:
             logger.error(f"Error getting data: {str(e)}")
-            return JSONResponse({'status': 500, 'message': str(e)})
+            return JSONResponse({'status': 500, 'message': "Ошибка при получении данных"})
 
         except Exception as e:
             logger.error(f"Error getting data: {str(e)}")
@@ -119,3 +119,47 @@ async def update_data(pereval_id: int, request: PerevalPostRequest) -> PatchResp
         logger.info(f"Data updated successfully.")
 
         return PatchResponse(state=1, message="Данные обновлены.")
+
+
+@router.get("/<user_email>",
+            summary="Получение данных о перевалах добавленных пользователем",
+            description="Получение данных о перевалах добавленных пользователем",
+            response_model=PerevalResponseByEmail)
+async def get_data_by_email(user_email: str):
+    async with database.connection():
+        try:
+            query = (
+                sqlalchemy.select(
+                    pereval_add_table,
+                    coords_table,
+                    users_table
+                )
+                .select_from(
+                    pereval_add_table
+                    .join(coords_table, pereval_add_table.c.coords_id == coords_table.c.id)
+                    .join(users_table, pereval_add_table.c.user_id == users_table.c.id)
+                )
+                .where(users_table.c.email == user_email)
+            )
+            entities = await database.fetch_all(query)
+
+            if entities:
+                list_perevals = []
+                for entity in entities:
+                    try:
+                        pereval = await get_pereval_by_id(entity)
+                        list_perevals.append(pereval)
+                    except Exception as e:
+                        logger.error(f"Error getting data: {str(e)}")
+                        continue
+                return PerevalResponseByEmail(perevals=list_perevals)
+
+            return JSONResponse({'status': 204, 'message': 'Данные не найдены.'})
+
+        except (DatabaseError, IntegrityError) as e:
+            logger.error(f"Error getting data: {str(e)}")
+            return JSONResponse({'status': 500, 'message': "Ошибка при получении данных"})
+
+        except Exception as e:
+            logger.error(f"Error getting data: {str(e)}")
+            return JSONResponse({'status': 500, 'message': "Ошибка при получении данных"})

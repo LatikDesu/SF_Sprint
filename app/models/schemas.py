@@ -82,3 +82,9 @@ class PerevalGetResponse(BaseModel):
     level: LevelModel
 
     images: list[ImagesModel]
+
+
+class PerevalResponseByEmail(BaseModel):
+    """ Model for get response to pereval by email"""
+
+    perevals: list[PerevalGetResponse]
