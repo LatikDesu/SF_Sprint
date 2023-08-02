@@ -43,7 +43,7 @@ async def submit_data(request: PerevalPostRequest) -> PerevalResponse:
             return PerevalResponse(status=500, message="Ошибка при отправке данных")
 
 
-@router.get("/<pereval_id>",
+@router.get("",
             summary="Получение данных о перевале по id",
             description="Получение данных о перевале по id",
             response_model=PerevalGetResponse)
