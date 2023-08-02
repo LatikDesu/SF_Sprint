@@ -43,10 +43,10 @@ async def submit_data(request: PerevalPostRequest) -> PerevalResponse:
             return PerevalResponse(status=500, message="Ошибка при отправке данных")
 
 
-@router.post("/<pereval_id>",
-             summary="Получение данных о перевале по id",
-             description="Получение данных о перевале по id",
-             response_model=PerevalGetResponse)
+@router.get("/<pereval_id>",
+            summary="Получение данных о перевале по id",
+            description="Получение данных о перевале по id",
+            response_model=PerevalGetResponse)
 async def get_data(pereval_id: int):
     async with database.transaction():
         try:
