@@ -5,8 +5,11 @@ from sqlalchemy.exc import DatabaseError, IntegrityError
 
 from app.db_connection import database
 from app.logger import get_logger
-from app.models.models import coords_table, images_table, pereval_add_table, users_table
-from app.models.schemas import CoordsModel, ImagesModel, PerevalPostRequest, UserModel, LevelModel, PerevalGetResponse
+from app.models.models import (coords_table, images_table, pereval_add_table,
+                               users_table)
+from app.models.schemas import (CoordsModel, ImagesModel, LevelModel,
+                                PerevalGetResponse, PerevalPostRequest,
+                                UserModel)
 
 logger = get_logger()
 

@@ -3,8 +3,10 @@
 import pytest
 
 from app.db_connection import database
-from app.models.models import users_table, coords_table, pereval_add_table, images_table
-from app.models.schemas import PerevalPostRequest, UserModel, CoordsModel, LevelModel, ImagesModel
+from app.models.models import (coords_table, images_table, pereval_add_table,
+                               users_table)
+from app.models.schemas import (CoordsModel, ImagesModel, LevelModel,
+                                PerevalPostRequest, UserModel)
 from app.routers.submitdata import submit_data
 
 

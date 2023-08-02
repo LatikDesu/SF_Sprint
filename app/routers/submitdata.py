@@ -5,11 +5,13 @@ from starlette.responses import JSONResponse
 
 from app.db_connection import database
 from app.logger import get_logger
-from app.models.models import pereval_add_table, coords_table, users_table
-from app.models.schemas import PerevalPostRequest, PerevalResponse, PerevalGetResponse, PatchResponse, \
-    PerevalResponseByEmail
-from app.utils.functions import get_or_create_coords, create_images, create_pereval, get_or_create_user, \
-    get_pereval_by_id, update_pereval
+from app.models.models import coords_table, pereval_add_table, users_table
+from app.models.schemas import (PatchResponse, PerevalGetResponse,
+                                PerevalPostRequest, PerevalResponse,
+                                PerevalResponseByEmail)
+from app.utils.functions import (create_images, create_pereval,
+                                 get_or_create_coords, get_or_create_user,
+                                 get_pereval_by_id, update_pereval)
 
 logger = get_logger()
 
@@ -20,7 +22,7 @@ router = APIRouter(prefix="/SubmitData", tags=["SubmitData"])
              summary="Отправка данных о перевале для обработки",
              description="Отправляет данные о перевале для обработки",
              response_model=PerevalResponse)
-async def submit_data(request: PerevalPostRequest):
+async def submit_data(request: PerevalPostRequest) -> PerevalResponse:
     async with database.transaction():
         try:
             user = await get_or_create_user(request.user)
@@ -66,6 +68,7 @@ async def get_data(pereval_id: int):
             if pereval:
                 logger.info(f"Data retrieved successfully. Pereval ID: {pereval.id}")
                 response = await get_pereval_by_id(pereval)
+                return response
 
             else:
                 logger.info(f"Data not found. Pereval ID: {pereval}")
