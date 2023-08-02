@@ -7,7 +7,9 @@
 - pydantic
 - alembic
 
-Swagger доступен по пути: http://127.0.0.1:8000/docs#/<br>
+Swagger доступен по пути:<br>
+http://127.0.0.1:8000/docs#/<br>
+https://api.latikdesu.art/docs
 
 Пример:
 ```
