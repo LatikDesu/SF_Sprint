@@ -110,9 +110,11 @@ async def update_data(pereval_id: int, request: PerevalPostRequest) -> PatchResp
             logger.error(f"Can not update data. Pereval ID: {pereval_id}")
             return PatchResponse(state=0, message='Запрещено изменять проверенные данные.')
 
-        if check_pereval.email != request.user.email:
+        if check_pereval.email != request.user.email or check_pereval.fam != request.user.fam or \
+                check_pereval.name != request.user.name or check_pereval.otc != request.user.otc \
+                or check_pereval.phone != request.user.phone:
             logger.error(f"Can not update user data. Pereval ID: {pereval_id}")
-            return PatchResponse(state=0, message='Запрещено изменять данные о другом пользователе.')
+            return PatchResponse(state=0, message='Запрещено изменять данные о пользователе.')
 
         user = check_pereval.user_id
         coords = await get_or_create_coords(request.coords, check_pereval.coords_id)
