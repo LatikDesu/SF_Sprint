@@ -5,6 +5,7 @@
 - uvicorn
 - psycopg2
 - pydantic
+- alimbic
 
 Swagger доступен по пути: http://127.0.0.1:8000/docs#/<br>
 
